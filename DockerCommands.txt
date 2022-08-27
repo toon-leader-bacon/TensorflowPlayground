@@ -1,0 +1,8 @@
+# Build the base image
+docker image build --tag base_gpu:latest  --file .\docker\BaseGPU\DockerFile .
+
+# Build the app image
+docker image build --tag nocab_app:latest  --file .\docker\playground\DockerFile .
+
+# Run the app in interactive mode
+docker run -it --rm nocab_app:latest bash
