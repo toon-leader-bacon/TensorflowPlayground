@@ -6,13 +6,12 @@ print("TensorFlow version:", tf.__version__)
 
 
 def blab():
-    minst = tf.keras.datasets.mnist
     # x_train: unit8 NumPy array of grayscale image data with shapes (60_000, 28, 28). 
     #          Pix values range from 0 to 255. Effectively 60k pictures
     # y_train: unit 8 NumPy array of digit labels (range 0-9) with shape (60_000)
     # x_test: same as x_train
     # y_test: same as y_train
-    (x_train, y_train), (x_test, y_test) = minst.load_data()
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
     
     # Divide every value in the images by 255. Effectively converting the range of [0,255]
     # to the range [0,1]
