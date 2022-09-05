@@ -3,7 +3,7 @@ import pathlib
 import os
 
 CACHE_DIR: str = "./images/"
-
+DATA_DIR: str = f"{CACHE_DIR}datasets/flower_photos/"
 
 def setup_directory():
     os.makedirs(CACHE_DIR, exist_ok=True)
@@ -17,7 +17,7 @@ def download_pics():
                                     untar=True,
                                     cache_dir=CACHE_DIR)
     data_dir = pathlib.Path(CACHE_DIR)
-    image_count = len(list(data_dir.glob('*/*.jpeg')))
+    image_count = len(list(data_dir.glob(f'{DATA_DIR}*.jpeg')))
     print(f"Downloaded {image_count} images")
     print("By default the download location is ~/.keras")
 
