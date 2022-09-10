@@ -1,10 +1,8 @@
-from encodings import normalize_encoding
 import glob
 import keras
 import os
 import tensorflow as tf
 import matplotlib.pyplot as plot
-import numpy
 
 CACHE_DIR: str = "./images/"
 DATA_DIR: str = f"{CACHE_DIR}datasets/flower_photos/"
@@ -65,7 +63,7 @@ def VisualizeData(train_ds, validation_ds):
     plot.figure(figsize=(10, 10))
     for images, labels in train_ds.take(1):
         for i in range(9):
-            ax = plot.subplot(3, 3, i + 1)
+            plot.subplot(3, 3, i + 1)
             plot.imshow(images[i].numpy().astype("uint8"))
             plot.title(train_ds.class_names[labels[i]])
             plot.axis("off")
