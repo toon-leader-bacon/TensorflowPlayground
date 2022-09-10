@@ -88,4 +88,4 @@ class Sampling(layers.Layer):
 
 
 if __name__ == '__main__':
-    blab()
+    buildEncoder()
