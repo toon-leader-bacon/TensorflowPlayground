@@ -19,7 +19,7 @@ def blab():
     print(x_train.shape)  # (60000, 28, 28)
     print(x_test.shape)  # (10000, 28, 28)
 
-    # showImg(x_train[10])  # Pixel value ranges from [0, 255]
+    showImg(x_train[10])  # Pixel value ranges from [0, 255]
 
     # We're making a "self-supervised" model so no need to split
     # data between train and test
