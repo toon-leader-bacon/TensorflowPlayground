@@ -31,4 +31,4 @@ def merge_all_images(dir_with_layers: str) -> numpy.ndarray:
 
 
 if __name__ == '__main__':
-    display_img(merge_all_images("./images/PokemonMaps/Gen1/Route1/"))
+    display_img(merge_all_images("./images/PokemonMaps/Gen1/Route3/"))
