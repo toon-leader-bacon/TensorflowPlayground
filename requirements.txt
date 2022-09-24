@@ -1,2 +1,5 @@
 numpy
 tensorflow
+
+imageio
+git+https://github.com/tensorflow/docs
