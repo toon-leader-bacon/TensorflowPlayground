@@ -12,12 +12,16 @@ BUFFER_SIZE: int = 60_000
 BATCH_SIZE: int = 256
 
 # Training
-EPOCHS: int = 50
+EPOCHS: int = 50  # On my machine it takes about 100s per epoch during training
 NOISE_DIM: int = 100
 NUM_EXAMPLES_TO_GEN: int = 16
 
 
 def entrypoint():
+    # Takes about 1.5 hours on my machine
+    # No GPU acceleration
+    # CPU = Ryzen 7
+    # Also I'm running other minor applications in the background
     train(load_data(), EPOCHS)
 
 
