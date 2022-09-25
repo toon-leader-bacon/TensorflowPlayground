@@ -96,7 +96,6 @@ def generate_and_save_images(model, epoch, seed):
         plt.imshow(predictions[i, :, :, 0] * 127.5 + 127.5, cmap='gray')
         plt.axis('off')
     plt.savefig(f'image_at_epoch_{epoch}.png')
-    plt.show()
 
 
 def no_training():
