@@ -61,7 +61,6 @@ def train(dataset, epochs):
     for epoch in range(epochs):
         start = time.time()
         for image_batch in dataset:
-            print('ping')
             train_step(image_batch)
 
         # Produce images for the GIF as we go
