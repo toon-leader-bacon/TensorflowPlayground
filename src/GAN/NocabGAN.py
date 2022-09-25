@@ -21,68 +21,47 @@ def entrypoint():
     train(load_data(), EPOCHS)
 
 
-# @tf.function
-# def train_step(images):
-#     # Create a BATCH_SIZE number of noise input images
-#     # Each with a dimension of [NOISE_DIM, NOISE_DIM]
-#     noise = tf.random.normal([BATCH_SIZE, NOISE_DIM])
-
-#     with tf.GradientTape() as generator_tape, tf.GradientTape() as discriminator_tape:
-#         # Use noise to generate fake images
-#         generated_images = generator_model(noise, training=True)
-
-#         # Discriminate on real and fake images
-#         real_output = discriminator_model(images, training=True)
-#         fake_output = discriminator_model(generated_images, training=True)
-
-#         # Use the discriminator's predictions on the fake data as input
-#         # into the generator's loss calculation error
-#         gen_loss = generator_loss(fake_output)
-#         # Use the discriminator's predictions on real and fake data
-#         # as input into the discriminator's loss calculation error
-#         disc_loss = discriminator_loss(real_output, fake_output)
-
-#     # Run the gradient descent on the cross entropy loss calculated in the
-#     # earlier code for the generator and discriminator
-#     gradients_of_generator = generator_tape.gradient(
-#         gen_loss, generator_model.trainable_variables)
-#     gradients_of_discriminator = discriminator_tape.gradient(
-#         disc_loss, discriminator_model.trainable_variables)
-
-#     # Apply the gradient descent calculated earlier onto the models
-#     generator_optimizer.apply_gradients(
-#         zip(gradients_of_generator, generator_model.trainable_variables))
-#     discriminator_optimizer.apply_gradients(
-#         zip(gradients_of_discriminator, discriminator_model.trainable_variables))
-
-#     # Training and back propagation complete!
-
-# Notice the use of `tf.function`
-# This annotation causes the function to be "compiled".
 @tf.function
 def train_step(images):
+    # Create a BATCH_SIZE number of noise input images
+    # Each with a dimension of [NOISE_DIM, NOISE_DIM]
     noise = tf.random.normal([BATCH_SIZE, NOISE_DIM])
 
-    with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
+    with tf.GradientTape() as generator_tape, tf.GradientTape() as discriminator_tape:
+        # Use noise to generate fake images
         generated_images = generator_model(noise, training=True)
 
+        # Discriminate on real and fake images
         real_output = discriminator_model(images, training=True)
         fake_output = discriminator_model(generated_images, training=True)
 
+        # Use the discriminator's predictions on the fake data as input
+        # into the generator's loss calculation error
         gen_loss = generator_loss(fake_output)
+        # Use the discriminator's predictions on real and fake data
+        # as input into the discriminator's loss calculation error
         disc_loss = discriminator_loss(real_output, fake_output)
 
-    gradients_of_generator = gen_tape.gradient(gen_loss, generator_model.trainable_variables)
-    gradients_of_discriminator = disc_tape.gradient(disc_loss, discriminator_model.trainable_variables)
+    # Run the gradient descent on the cross entropy loss calculated in the
+    # earlier code for the generator and discriminator
+    gradients_of_generator = generator_tape.gradient(
+        gen_loss, generator_model.trainable_variables)
+    gradients_of_discriminator = discriminator_tape.gradient(
+        disc_loss, discriminator_model.trainable_variables)
 
-    generator_optimizer.apply_gradients(zip(gradients_of_generator, generator_model.trainable_variables))
-    discriminator_optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator_model.trainable_variables))
+    # Apply the gradient descent calculated earlier onto the models
+    generator_optimizer.apply_gradients(
+        zip(gradients_of_generator, generator_model.trainable_variables))
+    discriminator_optimizer.apply_gradients(
+        zip(gradients_of_discriminator, discriminator_model.trainable_variables))
+    # Training and back propagation complete!
 
 
 def train(dataset, epochs):
     for epoch in range(epochs):
         start = time.time()
         for image_batch in dataset:
+            print('ping')
             train_step(image_batch)
 
         # Produce images for the GIF as we go
@@ -109,6 +88,7 @@ def train(dataset, epochs):
 
 
 def generate_and_save_images(model, epoch, seed):
+    print(f"Saving image for epoch {epoch}")
     predictions = model(seed, training=False)
     plt.figure(figsize=(4, 4))
 
@@ -173,8 +153,8 @@ def build_generator_model():
 
     # https://www.tensorflow.org/api_docs/python/tf/keras/layers/Conv2DTranspose
     model.add(layers.Conv2DTranspose(
-        filters=128,  # dimensionality of the output space
-        kernel_size=(5, 5),  # (height, width) of 2D convolution window
+        128,  # dimensionality of the output space
+        (5, 5),  # (height, width) of 2D convolution window
         strides=(1, 1),  # (height, width) of window strides
         padding='same',  # pad with zeros so output has the same height/ width dimension as input
         use_bias=False))
@@ -183,8 +163,8 @@ def build_generator_model():
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(
-        filters=64,  # dimensionality of the output space
-        kernel_size=(5, 5),  # (height, width) of 2D convolution window
+        64,  # dimensionality of the output space
+        (5, 5),  # (height, width) of 2D convolution window
         strides=(2, 2),  # (height, width) of window strides
         padding='same',  # pad with zeros so output has the same height/ width dimension as input
         use_bias=False))
@@ -193,8 +173,8 @@ def build_generator_model():
     model.add(layers.LeakyReLU())
 
     model.add(layers.Conv2DTranspose(
-        filters=1,  # dimensionality of the output space
-        kernel_size=(5, 5),  # (height, width) of 2D convolution window
+        1,  # dimensionality of the output space
+        (5, 5),  # (height, width) of 2D convolution window
         strides=(2, 2),  # (height, width) of window strides
         padding='same',  # pad with zeros so output has the same height/ width dimension as input
         use_bias=False,
@@ -206,18 +186,18 @@ def build_generator_model():
 
 def build_discriminator_model():
     model = tf.keras.Sequential()
-    model.add(layers.Conv2DTranspose(
-        filters=64,  # dimensionality of the output space
-        kernel_size=(5, 5),  # (height, width) of 2D convolution window
+    model.add(layers.Conv2D(
+        64,  # dimensionality of the output space
+        (5, 5),  # (height, width) of 2D convolution window
         strides=(2, 2),  # (height, width) of window strides
         padding='same',  # pad with zeros so output has the same height/ width dimension as input
         input_shape=[28, 28, 1]))  # Input shape matches generator output shape
     model.add(layers.LeakyReLU())
     model.add(layers.Dropout(0.3))
 
-    model.add(layers.Conv2DTranspose(
-        filters=164,  # dimensionality of the output space
-        kernel_size=(5, 5),  # (height, width) of 2D convolution window
+    model.add(layers.Conv2D(
+        128,  # dimensionality of the output space
+        (5, 5),  # (height, width) of 2D convolution window
         strides=(2, 2),  # (height, width) of window strides
         padding='same',  # pad with zeros so output has the same height/ width dimension as input
     ))
@@ -229,7 +209,6 @@ def build_discriminator_model():
     # Positive => Real
     # Negative => Fake
     model.add(layers.Dense(1))
-
     return model
 
 
@@ -260,14 +239,14 @@ def discriminator_loss(real_output, fake_output):
     # discriminator's predictions on real images to an array of 1s,
     real_loss = cross_entropy(
         # A tensor the same shape as real_output but only with value=1
-        y_true=tf.ones_like(real_output),
-        y_pred=real_output  # The model's predictions
+        tf.ones_like(real_output),
+        real_output  # The model's predictions
     )
     # discriminator's predictions on fake (generated) images to an array of 0s.
     fake_loss = cross_entropy(
         # A tensor the same shape as fake_output but only with value=1
         tf.zeros_like(fake_output),
-        fake_output  # THe model's predictions
+        fake_output  # The model's predictions
     )
     total_loss = real_loss + fake_loss
     return total_loss
