@@ -145,3 +145,7 @@ dmypy.json
 
 # Tensorflow/ Keras data
 /images/datasets/*
+
+# Training data/ outpus
+/TrainingCheckpoints/*
+image_at_epoch_*.png
