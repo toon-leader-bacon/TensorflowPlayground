@@ -144,7 +144,7 @@ def build_generator_model():
     # Uses Conv2DTranspose (upsampling) layers to generate image from random noise seed
     model = tf.keras.Sequential()
 
-    # Inpujt layer takes in a random seed
+    # Input layer takes in a random seed
     input_layer_nodes = 7 * 7 * 256
     model.add(layers.Dense(input_layer_nodes,
                            use_bias=False,
