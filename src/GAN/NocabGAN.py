@@ -21,6 +21,7 @@ def entrypoint():
     # Takes about 1.5 hours on my machine
     # No GPU acceleration
     # CPU = Ryzen 7
+    # GPU = RTX 2070 Super
     # Also I'm running other minor applications in the background
     train(load_data(), EPOCHS)
 
@@ -134,6 +135,8 @@ def load_data():
         .shuffle(BUFFER_SIZE) \
         .batch(BATCH_SIZE)
     return train_dataset
+
+###############################################
 # Create the Generator and Discriminator models
 
 
@@ -144,8 +147,8 @@ def build_generator_model():
     # Inpujt layer takes in a random seed
     input_layer_nodes = 7 * 7 * 256
     model.add(layers.Dense(input_layer_nodes,
-              use_bias=False,
-              input_shape=(100,)))
+                           use_bias=False,
+                           input_shape=(100,)))
     model.add(layers.BatchNormalization())
     model.add(layers.LeakyReLU())
 
