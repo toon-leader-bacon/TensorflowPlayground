@@ -1,0 +1,4 @@
+wget
+zstandard
+tensorflow
+keras

@@ -149,3 +149,4 @@ dmypy.json
 # Training data/ outpus
 /TrainingCheckpoints/*
 image_at_epoch_*.png
+*.pgn*
