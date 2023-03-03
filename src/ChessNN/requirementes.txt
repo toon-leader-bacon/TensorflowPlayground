@@ -1,4 +1,5 @@
+keras
+subprocess
+tensorflow
 wget
 zstandard
-tensorflow
-keras
