@@ -26,4 +26,4 @@ def extract_data(filename: str):
     pass
 
 
-
+extract_data("lichess_db_standard_rated_2016-03.pgn.zst")

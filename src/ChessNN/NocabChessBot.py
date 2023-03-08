@@ -42,5 +42,4 @@ def blab():
                   metrics=['accuracy'])
 
 
-# TODO: Get training data from Lichess
 # TODO: Write code for training this NN

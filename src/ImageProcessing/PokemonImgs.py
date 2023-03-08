@@ -30,5 +30,53 @@ def merge_all_images(dir_with_layers: str) -> numpy.ndarray:
     return numpy.asarray(result)
 
 
+# TODO: Goal: Convert an image to an array of integer values.
+# Pixel color corresponds to number value
+def blab(target_file_name: str):
+    pass
+    grass_img: Image = Image.open("./images/PokemonMaps/Gen1/Route3/" + "Grass.png")
+    result: numpy.ndarray = numpy.zeros((grass_img.width, grass_img.height), dtype=numpy.int8)
+
+    # Validate the data. Does the image have the correct RGBA channels?
+    band_names: tuple = grass_img.getbands()
+    if band_names != ("R", "G", "B", "A"):
+        print("Invalid Image! Provided image does NOT have the required bands (R, G, B, A).")
+        return
+
+    for x in range(grass_img.width):
+        for y in range(grass_img.height):
+            # result[x, y] = 
+            color_to_data(grass_img.getpixel((x, y)))
+
+    return result
+
+
+GRASS_1_RGB: tuple = (0, 153, 53, 255)
+GRASS_2_RGB: tuple = (0, 179, 62, 255)
+GRASS_TALL_RGB: tuple = (0, 77, 26, 255)
+
+GRASS_COLOR_TO_DATA: map(tuple, numpy.int8) = {
+    # TODO: Does using disparate numbers here matter? Should I be using 1, 2, 3
+    # or is having more distance between the numbers helpful for training?
+    GRASS_1_RGB: 1,
+    GRASS_2_RGB: 100,
+    GRASS_TALL_RGB: 200
+}
+
+
+def color_to_data(pixel: tuple) -> numpy.int8:
+    if len(pixel) != 4:
+        print("Invalid pixel! Provided pixel does NOT have the expected 4 bands RGBA: " + pixel)
+
+    if pixel[3] == 0:
+        # If alpha is totally transparent
+        return 0
+    if pixel in GRASS_COLOR_TO_DATA:
+        return GRASS_COLOR_TO_DATA[pixel]
+    # Else unknown color
+    print("Unexpected pixel color! Assuming transparent\n" + pixel)
+    return 0
+
+
 if __name__ == '__main__':
-    display_img(merge_all_images("./images/PokemonMaps/Gen1/Route3/"))
+    blab(merge_all_images("./images/PokemonMaps/Gen1/Route3/"))
