@@ -33,7 +33,6 @@ def merge_all_images(dir_with_layers: str) -> numpy.ndarray:
 # TODO: Goal: Convert an image to an array of integer values.
 # Pixel color corresponds to number value
 def blab(target_file_name: str):
-    pass
     grass_img: Image = Image.open("./images/PokemonMaps/Gen1/Route3/" + "Grass.png")
     result: numpy.ndarray = numpy.zeros((grass_img.width, grass_img.height), dtype=numpy.int8)
 
@@ -58,6 +57,8 @@ GRASS_TALL_RGB: tuple = (0, 77, 26, 255)
 GRASS_COLOR_TO_DATA: map(tuple, numpy.int8) = {
     # TODO: Does using disparate numbers here matter? Should I be using 1, 2, 3
     # or is having more distance between the numbers helpful for training?
+    # Answer: Probably not. Simply bounding the possible output values via
+    # the activation function could be ok?
     GRASS_1_RGB: 1,
     GRASS_2_RGB: 100,
     GRASS_TALL_RGB: 200
