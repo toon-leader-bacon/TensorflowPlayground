@@ -1,5 +1,6 @@
 import numpy
 import matplotlib.pyplot as plot
+import src.ImageProcessing.ColorMap as colors
 from PIL import Image
 
 
@@ -50,21 +51,6 @@ def blab(target_file_name: str):
     return result
 
 
-GRASS_1_RGB: tuple = (0, 153, 53, 255)
-GRASS_2_RGB: tuple = (0, 179, 62, 255)
-GRASS_TALL_RGB: tuple = (0, 77, 26, 255)
-
-GRASS_COLOR_TO_DATA: map(tuple, numpy.int8) = {
-    # TODO: Does using disparate numbers here matter? Should I be using 1, 2, 3
-    # or is having more distance between the numbers helpful for training?
-    # Answer: Probably not. Simply bounding the possible output values via
-    # the activation function could be ok?
-    GRASS_1_RGB: 1,
-    GRASS_2_RGB: 100,
-    GRASS_TALL_RGB: 200
-}
-
-
 def color_to_data(pixel: tuple) -> numpy.int8:
     if len(pixel) != 4:
         print("Invalid pixel! Provided pixel does NOT have the expected 4 bands RGBA: " + pixel)
@@ -72,8 +58,8 @@ def color_to_data(pixel: tuple) -> numpy.int8:
     if pixel[3] == 0:
         # If alpha is totally transparent
         return 0
-    if pixel in GRASS_COLOR_TO_DATA:
-        return GRASS_COLOR_TO_DATA[pixel]
+    if pixel in colors.GRASS_COLOR_TO_DATA:
+        return colors.GRASS_COLOR_TO_DATA[pixel]
     # Else unknown color
     print("Unexpected pixel color! Assuming transparent\n" + pixel)
     return 0
