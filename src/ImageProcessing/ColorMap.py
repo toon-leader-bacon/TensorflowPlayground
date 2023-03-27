@@ -1,4 +1,5 @@
 import numpy
+from typing import Dict
 
 BG_MOSS:    tuple = (67, 77, 0, 255)
 BG_GRASS_1: tuple = (89, 102, 0, 255)
@@ -43,7 +44,7 @@ BG_BUILDING:    tuple = (204, 60, 29, 255)
 BG_TOP_LAYER:   tuple = (229, 67, 32, 255)
 BG_SECRET_BASE: tuple = (255, 75, 36, 255)
 
-BG_COLOR_TO_DATA: map(tuple, numpy.int8) = {
+BG_COLOR_TO_DATA: Dict[tuple, numpy.int8] = {
     BG_MOSS:    1,
     BG_GRASS_1: 2,
     BG_GRASS_2: 3,
@@ -94,7 +95,7 @@ GRASS_1_RGB:    tuple = (0, 153, 53, 255)
 GRASS_2_RGB:    tuple = (0, 179, 62, 255)
 GRASS_TALL_RGB: tuple = (0, 77, 26, 255)
 
-GRASS_COLOR_TO_DATA: map(tuple, numpy.int8) = {
+GRASS_COLOR_TO_DATA: Dict[tuple, numpy.int8] = {
     # TODO: Does using disparate numbers here matter? Should I be using 1, 2, 3
     # or is having more distance between the numbers helpful for training?
     # Answer: Probably not. Simply bounding the possible output values via
@@ -123,7 +124,7 @@ SURFACE_POKEBALL_TREE:    tuple = (0, 255, 255, 255)
 SURFACE_HIDDEN_ITEM: tuple = (213, 0, 229, 255)
 SURFACE_WARP_ZONE:   tuple = (237, 0, 255)
 
-SURFACE_COLOR_TO_DATA:  map(tuple, numpy.int8) = {
+SURFACE_COLOR_TO_DATA:  Dict[tuple, numpy.int8] = {
     SURFACE_BIKE_PATH:  1,
     SURFACE_BIKE_SLOPE: 2,
     SURFACE_FLOWER_1:   3,
@@ -176,7 +177,7 @@ TRAINER_LOOK_UP_LEFT:    tuple = (127, 78, 54, 255)
 TRAINER_LOOK_DOWN_RIGHT: tuple = (102, 62, 43, 255)
 TRAINER_LOOK_DOWN_LEFT:  tuple = (77, 47, 32, 255)
 
-TRAINER_COLOR_TO_DATA:  map(tuple, numpy.int8) = {
+TRAINER_COLOR_TO_DATA:  Dict[tuple, numpy.int8] = {
     TRAINER_WALK_AROUND:    1,
     TRAINER_RUN_UP_DOWN:    2,
     TRAINER_RUN_LEFT_RIGHT: 3,
@@ -209,7 +210,7 @@ SWIMMABLE:    tuple = (0, 179, 255, 255)
 IMPASSABLE:   tuple = (255, 0, 0, 255)
 SEMIPASSABLE: tuple = (255, 255, 0, 255)
 
-PASSABLE_COLOR_TO_DATA:  map(tuple, numpy.int8) = {
+PASSABLE_COLOR_TO_DATA:  Dict[tuple, numpy.int8] = {
     WALKABLE:     1,
     SWIMMABLE:    2,
     IMPASSABLE:   3,

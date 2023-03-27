@@ -6,7 +6,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import matplotlib.pyplot as plot
 
-
+# TODO: Put this show image in a utility class somewhere
 def showImg(img):
     plot.imshow(img)
     plot.colorbar()
