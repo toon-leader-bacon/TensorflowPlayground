@@ -43,26 +43,42 @@ def blab(target_file_name: str):
         print("Invalid Image! Provided image does NOT have the required bands (R, G, B, A).")
         return
 
+    # Convert every pixel to it's associated integer
     for x in range(grass_img.width):
         for y in range(grass_img.height):
-            # result[x, y] = 
-            color_to_data(grass_img.getpixel((x, y)))
+            result[x, y] = color_to_data(grass_img.getpixel((x, y)))
 
     return result
 
 
-def color_to_data(pixel: tuple) -> numpy.int8:
+def color_to_data(pixel: tuple, color_map: map(tuple, numpy.int8)) -> numpy.int8:
     if len(pixel) != 4:
         print("Invalid pixel! Provided pixel does NOT have the expected 4 bands RGBA: " + pixel)
 
     if pixel[3] == 0:
         # If alpha is totally transparent
         return 0
-    if pixel in colors.GRASS_COLOR_TO_DATA:
-        return colors.GRASS_COLOR_TO_DATA[pixel]
+    if pixel in color_map:
+        return color_map[pixel]
     # Else unknown color
     print("Unexpected pixel color! Assuming transparent\n" + pixel)
     return 0
+
+
+def color_to_data_grass(pixel: tuple) -> numpy.int8:
+    return color_to_data(pixel, colors.GRASS_COLOR_TO_DATA)
+
+
+def color_to_data_bg(pixel: tuple) -> numpy.int8:
+    return color_to_data(pixel, colors.BG_COLOR_TO_DATA)
+
+
+def color_to_data_surface(pixel: tuple) -> numpy.int8:
+    return color_to_data(pixel, colors.SURFACE_COLOR_TO_DATA)
+
+
+def color_to_data_TRAINER_COLOR_TO_DATA(pixel: tuple) -> numpy.int8:
+    return color_to_data(pixel, colors.TRAINER_COLOR_TO_DATA)
 
 
 if __name__ == '__main__':
