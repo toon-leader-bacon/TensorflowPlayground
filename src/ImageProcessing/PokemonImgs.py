@@ -1,9 +1,9 @@
-import numpy
-import matplotlib.pyplot as plot
-from typing import Dict
-
-from src.ImageProcessing import ColorMap as colors
 from PIL import Image
+from src.ImageProcessing import ColorMap as colors
+from src.NocabUtility import utility as nocabUtil
+from typing import Dict
+import matplotlib.pyplot as plot
+import numpy
 
 
 def display_img(img, title: str = "image") -> None:
@@ -97,12 +97,6 @@ def color_to_data_TRAINER_COLOR_TO_DATA(pixel: tuple) -> numpy.int8:
     return color_to_data(pixel, colors.TRAINER_COLOR_TO_DATA)
 
 
-def showImg(img):
-    plot.imshow(img)
-    plot.colorbar()
-    plot.show()
-
-
 if __name__ == '__main__':
     grass_img: Image = Image.open("./images/PokemonMaps/Gen1/Route3/" + "Grass.png")
     arr: numpy.ndarray = layer_to_data(grass_img, colors.GRASS_COLOR_TO_DATA)
@@ -110,4 +104,4 @@ if __name__ == '__main__':
     import sys
     numpy.set_printoptions(threshold=sys.maxsize)
     print(arr)
-    showImg(grass_img)
+    nocabUtil.showImg(grass_img)

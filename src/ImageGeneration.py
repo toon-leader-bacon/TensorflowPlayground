@@ -4,13 +4,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import matplotlib.pyplot as plot
-
-# TODO: Put this show image in a utility class somewhere
-def showImg(img):
-    plot.imshow(img)
-    plot.colorbar()
-    plot.show()
+from src.NocabUtility import utility as nocabUtil
 
 
 def blab():
@@ -19,7 +13,7 @@ def blab():
     print(x_train.shape)  # (60000, 28, 28)
     print(x_test.shape)  # (10000, 28, 28)
 
-    showImg(x_train[10])  # Pixel value ranges from [0, 255]
+    nocabUtil.showImg(x_train[10])  # Pixel value ranges from [0, 255]
 
     # We're making a "self-supervised" model so no need to split
     # data between train and test
@@ -34,7 +28,7 @@ def blab():
     data = tf.cast(data, tf.float32)
     data = data / 255.0
 
-    showImg(data[10])  # Pixel value ranges from [0.0, 1.0]
+    nocabUtil.showImg(data[10])  # Pixel value ranges from [0.0, 1.0]
 
 
 def buildEncoder():

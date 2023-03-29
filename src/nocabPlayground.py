@@ -2,7 +2,6 @@ import keras
 
 
 def blab():
-    pass
     inputs: keras.Input = keras.Input(shape=(3,))  # 3 dimensional input
     hidden1: keras.layers.Dense = keras.layers.Dense(
         units=32,  # dimensionality of the output space,
