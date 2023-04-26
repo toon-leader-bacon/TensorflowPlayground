@@ -39,3 +39,15 @@ def color_dist_redmean(c1, c2) -> float:
     return ((2 + (rAve / 256)) * deltaRSqr) + \
            (4 * deltaGSqr) + \
            ((2 + ((255-rAve) / 256)) * deltaBSqr)
+
+
+def find_nearest_color(pix: Tuple[float], colors: Set[Tuple[float]], dist_func):
+    nearest_dist: float = 999999
+    return_color: Tuple[float] = pix
+    for color in colors:
+        dist: float = dist_func(pix, color)
+        if (dist < nearest_dist):
+            # If the pixel is closer to this color than the previous nearest
+            nearest_dist = dist
+            return_color = color
+    return return_color
