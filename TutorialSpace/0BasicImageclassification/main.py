@@ -9,6 +9,8 @@ import typing
 print("Tensorflow Version: ")
 print(tf.__version__)
 
+DISABLE_PRINT = True
+
 # Get the MNIST Fashion data
 # The images are 28x28 NumPy arrays,
 # with pixel values ranging from 0 to 255.
@@ -52,7 +54,8 @@ def plot_image(img: np.ndarray, title: str = "") -> None:
     plt.show()
 
 
-plot_image(train_images[0], "train image 0")  # type = np.ndarray
+if (not DISABLE_PRINT):
+    plot_image(train_images[0], "train image 0")  # type = np.ndarray
 
 # Each pixel is in the range of [0, 255]
 # Scale each to the range [0, 1]
@@ -68,7 +71,8 @@ for i in range(25):
     plt.grid(False)
     plt.imshow(train_images[i], cmap=plt.cm.binary)
     plt.xlabel(class_names[train_labels[i]])
-plt.show()
+if (not DISABLE_PRINT):
+    plt.show()
 
 
 def build_model() -> tf.keras.Sequential:
@@ -103,8 +107,58 @@ test_loss, test_acc = model.evaluate(test_images,  test_labels, verbose=2)
 print(f"Accuracy from the model: %{test_acc * 100}")
 # Accuracy is about 88%
 
-# Convert model to output probability 
+# Convert model to output probability
 probability_model: tf.keras.Sequential = tf.keras.Sequential([model,
                                                              tf.keras.layers.Softmax()])
-predictions = probability_model.predict(test_images)
 
+# Use the model to make a prediction for each image, and a % confidence for each label
+predictions: np.ndarray = probability_model.predict(test_images)
+print(predictions[0])
+#
+highest_prob_label: int = np.argmax(predictions[0])
+print(
+    f"Largest % confidence {highest_prob_label} -> {class_names[highest_prob_label]}")
+
+###########################################################
+# Graph/ display the results
+
+
+def plot_image(i: int, predictions_array: np.ndarray, true_label: np.ndarray, img) -> None:
+    # Display a the image, along with a title for the % confidence and label name
+    true_label, img = true_label[i], img[i]
+    predicted_label: int = np.argmax(predictions_array)
+    color: str = 'blue' if predicted_label == true_label else 'red'
+
+    plt.grid(False)
+    plt.xticks([])
+    plt.yticks([])
+    plt.imshow(img, cmap=plt.cm.binary)
+    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
+                                         100 * np.max(predictions_array),
+                                         class_names[true_label]),
+               color=color)
+
+
+def plot_value_array(i: int, predictions_array: np.ndarray, true_labels: np.ndarray) -> None:
+    # Display a bar chart of the various label predictions, blue bar = true, red = predicted, grey = other
+    true_label: int = true_labels[i]
+
+    plt.grid(False)
+    plt.xticks(range(10))
+    plt.yticks([])
+    thisplot: plt.BarContainer = plt.bar(
+        range(10), predictions_array, color='#777777')
+    plt.ylim([0, 1])
+    predicted_label: int = np.argmax(predictions_array)
+
+    thisplot[predicted_label].set_color('red')
+    thisplot[true_label].set_color('blue')
+
+
+predictions: np.ndarray = probability_model.predict(test_images)
+plt.figure(figsize=(6, 3))
+plt.subplot(1, 2, 1)
+plot_image(0, predictions[0], test_labels, test_images)
+plt.subplot(1, 2, 2)
+plot_value_array(0, predictions[0], test_labels)
+plt.show()
