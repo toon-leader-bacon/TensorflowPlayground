@@ -145,6 +145,8 @@ dmypy.json
 
 # Tensorflow/ Keras data
 /images/datasets/*
+/aclImdb
+aclImdb_v1.tar.gz
 
 # Training data/ outpus
 /TrainingCheckpoints/*
