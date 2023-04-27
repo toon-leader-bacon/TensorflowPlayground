@@ -67,7 +67,7 @@ def layer_to_data(layer: Image, color_map: Dict[tuple, numpy.int8]) -> numpy.nda
     return result
 
 
-def color_to_data(pixel: tuple, color_map: Dict[tuple, numpy.int8]) -> numpy.int8:
+def color_to_data(pixel: Tuple[int], color_map: Dict[tuple, numpy.int8]) -> numpy.int8:
     if len(pixel) != 4:
         print("Invalid pixel! Provided pixel does NOT have the expected 4 bands RGBA: " + pixel)
 
