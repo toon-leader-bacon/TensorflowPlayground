@@ -21,10 +21,10 @@ def display_img(img, title: str = "image") -> None:
 
 
 def merge_all_images(dir_with_layers: str) -> numpy.ndarray:
-    bg_img: Image = Image.open(dir_with_layers + "Background.png")
-    grass_img: Image = Image.open(dir_with_layers + "Grass.png")
-    surface_img: Image = Image.open(dir_with_layers + "Surface.png")
-    trainer_img: Image = Image.open(dir_with_layers + "Trainer.png")
+    bg_img: Image.Image = Image.open(dir_with_layers + "Background.png")
+    grass_img: Image.Image = Image.open(dir_with_layers + "Grass.png")
+    surface_img: Image.Image = Image.open(dir_with_layers + "Surface.png")
+    trainer_img: Image.Image = Image.open(dir_with_layers + "Trainer.png")
 
     result = Image.alpha_composite(bg_img, grass_img)
     result = Image.alpha_composite(result, surface_img)
@@ -36,7 +36,7 @@ def merge_all_images(dir_with_layers: str) -> numpy.ndarray:
 # Convert an image to an array of integer values.
 # Pixel color corresponds to number value
 def blab(target_file_name: str) -> numpy.ndarray:
-    grass_img: Image = Image.open("./images/PokemonMaps/Gen1/Route3/" + "Grass.png")
+    grass_img: Image.Image = Image.open("./images/PokemonMaps/Gen1/Route3/" + "Grass.png")
     result: numpy.ndarray = numpy.zeros((grass_img.width, grass_img.height), dtype=numpy.int8)
 
     # Validate the data. Does the image have the correct RGBA channels?

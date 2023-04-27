@@ -11,8 +11,8 @@ def color_dist_eculid(c1, c2) -> float:
 
 def color_dist_nonlinear(c1, c2) -> float:
     # https://en.wikipedia.org/wiki/Color_difference
-    (r1, g1, b1) = c1
-    (r2, g2, b2) = c2
+    (r1, g1, b1, alpha) = c1
+    (r2, g2, b2, alpha) = c2
 
     deltaRSqr: float = (r1 - r2) ** 2
     deltaGSqr: float = (g1 - g2) ** 2
