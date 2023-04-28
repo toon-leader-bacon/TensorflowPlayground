@@ -78,3 +78,38 @@ raw_val_ds: tf.data.Dataset = tf.keras.utils.text_dataset_from_directory(
 raw_test_ds: tf.data.Dataset = tf.keras.utils.text_dataset_from_directory(
     'aclImdb/test',
     batch_size=batch_size)  # type: ignore
+
+
+def custom_standardization(input_data: str) -> str:
+    # Clean the data (remove punctuation and/or html tags)
+    # Convert data to all lowercase
+    lowercase = tf.strings.lower(input_data)  # : tf.Tensor[str]
+    # Remove html tags
+    stripped_html: tf.Tensor = tf.strings.regex_replace(
+        lowercase, '<br />', ' ')
+    # Escape all punctuation
+    return tf.strings.regex_replace(stripped_html,
+                                    '[%s]' % re.escape(string.punctuation),
+                                    '')
+
+
+# Vectorize the data means converting each token into a number
+max_features: int = 10000  # 10k
+sequence_length: int = 250
+
+# A layer to convert text data into  various representations that the
+# model can more easily understand
+vectorize_layer: layers.TextVectorization = layers.TextVectorization(
+    standardize=custom_standardization,  # type: ignore
+    max_tokens=max_features,
+    output_mode='int',
+    output_sequence_length=sequence_length)
+
+# Make a text-only dataset (without labels), then call adapt
+# NOTE It's important to only use the training data when using the adapt(...) func
+# The identify function is simply being mapped across the raw training data
+train_text = raw_train_ds.map(lambda x, y: x)
+# Use the training_text and pass it through the vectorization layer
+vectorize_layer.adapt(train_text)
+
+
