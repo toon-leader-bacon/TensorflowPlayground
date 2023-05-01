@@ -113,3 +113,75 @@ train_text = raw_train_ds.map(lambda x, y: x)
 vectorize_layer.adapt(train_text)
 
 
+def vectorize_text(text: str, label: str):
+    # Each token will be converted to a number, and put in a tensor array
+    text = tf.expand_dims(text, -1)
+    return vectorize_layer(text), label
+
+
+# Visualize the vectorization layer
+text_batch, label_batch = next(iter(raw_train_ds))  # batch size = 32
+first_review, first_label = text_batch[0], label_batch[0]
+print("======showing reviews======")
+print("Review", first_review)  # "Without mental anachronism, this film..."
+print("\n")
+print("Label", raw_train_ds.class_names[first_label])
+print("\n")
+print("Vectorized review", vectorize_text(
+    first_review, first_label))  # [203, 1673, 1, ...]
+print("\n")
+print("===========================")
+
+print("203 -> ", vectorize_layer.get_vocabulary()[203])  # "without"
+print("1673 -> ", vectorize_layer.get_vocabulary()[1673])  # "mental"
+print("1 -> ", vectorize_layer.get_vocabulary()[1])  # "anachronism"
+
+############################
+# Time to train the model
+
+# Vectorize the data into
+train_ds = raw_train_ds.map(vectorize_text)
+val_ds = raw_val_ds.map(vectorize_text)
+test_ds = raw_test_ds.map(vectorize_text)
+
+# Data management performance improvements
+# https://www.tensorflow.org/guide/data_performance
+train_ds = train_ds.cache().prefetch(buffer_size=tf.data.AUTOTUNE)
+val_ds = val_ds.cache().prefetch(buffer_size=tf.data.AUTOTUNE)
+test_ds = test_ds.cache().prefetch(buffer_size=tf.data.AUTOTUNE)
+
+
+def make_model() -> tf.keras.Sequential:
+    embedding_dim: int = 16
+    model: tf.keras.Sequential = tf.keras.Sequential([
+        # Embedding layer: https://www.tensorflow.org/text/guide/word_embeddings
+        # Embedding values for words are learned during training
+        # input_dim = size of vocabulary, max integer index + 1
+        # output_dim = size of dense embedding
+        # Resultant dimension = (batch, sequence, embedding)
+        layers.Embedding(input_dim=max_features + 1, output_dim=embedding_dim),
+        layers.Dropout(0.2),
+        # Average over the sequence dimension. Allows handling variable length input
+        layers.GlobalAveragePooling1D(),
+        layers.Dropout(0.2),
+        layers.Dense(1)
+    ])
+    model.summary()
+    return model
+
+
+model: tf.keras.Sequential = make_model()
+model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
+              optimizer='adam',
+              metrics=tf.metrics.BinaryAccuracy(threshold=0.0))
+
+epochs: int = 10
+history = model.fit(
+    train_ds,  # vectorized
+    validation_data=val_ds,  # vectorized
+    epochs=epochs
+)
+
+loss, accuracy = model.evaluate(test_ds)
+print(f"Loss: {loss}")
+print(f"Accuracy: {accuracy}")
