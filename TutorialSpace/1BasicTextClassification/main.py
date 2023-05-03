@@ -176,7 +176,7 @@ model.compile(loss=losses.BinaryCrossentropy(from_logits=True),
               metrics=tf.metrics.BinaryAccuracy(threshold=0.0))
 
 epochs: int = 10
-history = model.fit(
+history: tf.keras.callbacks.History = model.fit(
     train_ds,  # vectorized
     validation_data=val_ds,  # vectorized
     epochs=epochs
@@ -184,4 +184,53 @@ history = model.fit(
 
 loss, accuracy = model.evaluate(test_ds)
 print(f"Loss: {loss}")  # ~0.31
-print(f"Accuracy: {accuracy}")  # ~87% Pretty good B)
+print(f"Accuracy: {accuracy}")  # ~87% Pretty good :sunglasses:
+
+history_dict: dict = history.history
+print(history_dict.keys())
+# 4 entries
+# loss
+# binary_accuracy
+# val_loss
+# val_binary_accuracy
+
+# Plot these values over training time
+
+
+def plot_loss(loss, val_loss) -> None:
+    epochs = range(1, len(loss) + 1)
+    # 'bo' means "Blue Dot"
+    plt.plot(epochs, loss, 'bo', label='Training Loss')
+    # 'b' means "Blue line"
+    plt.plot(epochs, val_loss, 'b', label='Validation Loss')
+    plt.title('training and validation loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
+
+
+def plot_accuracy(acc, val_acc) -> None:
+    epochs = range(1, len(acc) + 1)
+    # 'bo' means "Blue Dot"
+    plt.plot(epochs, acc, 'bo', label='Training Acc')
+    # 'b' means "Blue line"
+    plt.plot(epochs, val_acc, 'b', label='Validation Acc')
+    plt.title('training and validation Acc')
+    plt.xlabel('Epochs')
+    plt.ylabel('Acc')
+    plt.legend(loc='lower right')
+    plt.show()
+
+
+plot_loss(history_dict["loss"], history_dict["val_loss"])
+plot_accuracy(history_dict["binary_accuracy"], history_dict["val_binary_accuracy"])
+
+# These plots demonstrate overfitting, 
+# where the validation accuracy peaks before the training accuracy
+# Consider using the tf.keras.callbacks.EarlyStopping to prevent overfitting
+######################################################################################
+
+
+
+
