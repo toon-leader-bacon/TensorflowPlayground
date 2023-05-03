@@ -231,6 +231,38 @@ plot_accuracy(history_dict["binary_accuracy"], history_dict["val_binary_accuracy
 # Consider using the tf.keras.callbacks.EarlyStopping to prevent overfitting
 ######################################################################################
 
+# Previously we simply pre-processed the data before training
+# But lets make a layer that processes the data for us
+# Vectorization layer
+# NOTE: If you're training on the GPU it's more performant to train with out
+# the vectorization layer (for parallelization and data buffering reasons)
+# then add the vectorization layer to the deployment model after training.
+# Just make sure the training data is vectorized in the same way the layer will 
 
+export_model: tf.keras.Sequential = tf.keras.Sequential([
+    vectorize_layer,
+    model,
+    layers.Activation('sigmoid')
+])
+
+export_model.compile(
+    loss=losses.BinaryCrossentropy(from_logits=False),
+    optimizer='adam',
+    metrics=['accuracy']
+)
+
+# Test it with `raw_test_ds`, which yields raw strings
+loss, accuracy = export_model.evaluate(raw_test_ds)
+print(f"Accuracy of vectorized layer model with raw data strings: {accuracy}")
+
+#####################################################################################
+
+# Use the model for one off tests
+examples: list[str] = [
+    "The movie was great!",
+    "The movie was okay.",
+    "The movie was terrible!"
+]
+export_model.predict(examples)
 
 
