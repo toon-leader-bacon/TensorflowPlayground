@@ -59,10 +59,16 @@ def build_vectorization_layer() -> layers.TextVectorization:
     )
     return result
 
+
 def vectorize_text_(text: str, label: str, vectorizer: layers.TextVectorization):
+    # Each token will be converted to a number, and put in a tensor array
     text = tf.expand_dims(text, -1)
     return vectorizer(text), label
 
-def vectorize_text(text: List[str], label: str):
-    # Each token will be converted to a number, and put in a tensor array
-    # TODO: build a build_vectorization_layer() and cache it, then apply it to the batch of text
+
+def vectorize_text(text: List[str], label: str) -> list[tuple]:
+    vectorize_layer: layers.TextVectorization = build_vectorization_layer()
+    result: list[tuple] = []  # list of tuple of (vectorizedText, label)
+    for txt in text:
+        result.append(vectorize_text_(txt, label, vectorize_layer))
+    return result
