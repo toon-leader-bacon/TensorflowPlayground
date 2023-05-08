@@ -9,12 +9,12 @@ from src.ImageProcessing import ColorDist
 # it will be excluded from the returned set
 def make_cardinal_directions(pix_xy: Tuple[int, int], max_width: int, max_height: int) -> Set[Tuple[int, int]]:
     (x0, y0) = pix_xy
-    
+
     xLeft: int = x0 - 1
     xRight: int = x0 + 1
     yUp: int = y0 - 1
     yDown: int = y0 + 1
-    
+
     neighbors: Set[Tuple[int, int]] = set()
     if (0 <= xLeft and xLeft < max_width):
         neighbors.add((xLeft, y0))
@@ -25,6 +25,7 @@ def make_cardinal_directions(pix_xy: Tuple[int, int], max_width: int, max_height
     if (0 <= yDown and yDown < max_height):
         neighbors.add((x0, yDown))
     return neighbors
+
 
 def flood_fill_select(pix_xy: Tuple[int, int], image: Image.Image, distance_epsilon: float = 10):
     width: int = image.width
@@ -51,14 +52,17 @@ def flood_fill_select(pix_xy: Tuple[int, int], image: Image.Image, distance_epsi
         # Else this is a similar pixel and should be selected
         selected_pixels.add(current_pix_xy)
         # continue the search on its neighbors
-        to_explore = to_explore.union(make_cardinal_directions(current_pix_xy, width, height))
+        to_explore = to_explore.union(
+            make_cardinal_directions(current_pix_xy, width, height))
     return selected_pixels
 
 
 def main() -> None:
-    bg_image: Image.Image = Image.open("./images/PokemonMaps/Gen1/Route3/" + "Background.png")
+    bg_image: Image.Image = Image.open(
+        "./images/PokemonMaps/Gen1/Route3/" + "Background.png")
     bottom_left_xy: Tuple[int, int] = (0, bg_image.height - 1)
-    mountain_edge_pixs_xy: set[Tuple[int, int]] = flood_fill_select(bottom_left_xy, bg_image)
+    mountain_edge_pixs_xy: set[Tuple[int, int]] = \
+        flood_fill_select(bottom_left_xy, bg_image)
     print(mountain_edge_pixs_xy)
 
 
